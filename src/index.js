@@ -3,11 +3,12 @@ const express = require('express')
 const handlebars = require('express-handlebars')
 const http = require('http')
 const { Server } = require('socket.io')
+require('dotenv').config()
 
 const app = express()
 const server = http.createServer(app)
 const io = new Server(server)
-const PORT = 3030
+const PORT = process.env.PORT || 3030
 
 // config static file
 app.use(express.static(path.join(__dirname, 'public'))) // __dirname là thư mục chứa index.js
