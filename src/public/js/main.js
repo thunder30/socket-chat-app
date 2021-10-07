@@ -1,4 +1,6 @@
+//import toast from './toast.js'
 var socket = io()
+
 function handleName() {
     let name = prompt('Vui lòng nhập tên!').trim()
     socket.emit('set-user', { name, message: '' })
@@ -8,6 +10,35 @@ function handleName() {
 function receiveMessage() {
     socket.on('chat-message', (data) => {
         appendMessage(data)
+    })
+}
+
+function onMemberJoin() {
+    socket.on('member-join', (data) => {
+        const title = 'Thông báo!'
+        const time = handleTime()
+        const delay = 3000
+        const animation = true
+        const autohide = true
+        const div = $(`
+            <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" data-autohide="${autohide}"
+                data-animation="${animation}" data-delay="${delay}">
+            </div>`).html(`
+                <div class="toast-header">
+                    <strong class="mr-auto text-primary">${title}</strong>
+                    <small class="text-muted">${time}</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="toast-body">
+                <span style="font-weight: 500;">${data.name}</span>  ${
+            data.join ? 'vừa tham gia!' : 'vừa rời đi!'
+        } 
+                </div>
+            `)
+        div.toast('show')
+        $('.container-toast').append(div)
     })
 }
 
@@ -61,6 +92,9 @@ function appendMessage(data) {
 var input = $('input')
 var button = $('button')
 
+var name = handleName()
+onMemberJoin()
+
 input.keypress((e) => {
     if (e.keyCode === 13) sendMessage()
 })
@@ -68,4 +102,3 @@ input.keypress((e) => {
 button.click(sendMessage)
 
 receiveMessage()
-var name = handleName()

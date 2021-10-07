@@ -38,7 +38,7 @@ const users = []
 const socketId = []
 let amountUser = 0
 // websocket
-io.on('connection', (socket) => {
+io.sockets.on('connection', (socket) => {
     //console.log(socket.id)
 
     socketId.push(socket.id)
@@ -46,18 +46,31 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         let index = socketId.indexOf(socket.id)
+        socket.broadcast.emit('member-join', {
+            // thông báo cho các user khác
+            name: users[index],
+            join: false,
+        })
+
         console.log(`${users[index]} out socket!`)
         socketId.splice(index, 1)
         users.splice(index, 1)
         console.log(users)
-        //console.log('Amount user connecting: ', socketId.length)
     })
     socket.on('set-user', (data) => {
         users.push(data.name)
+        socket.broadcast.emit('member-join', {
+            // thông báo cho các user khác
+            name: data.name,
+            join: true,
+        })
         console.log(users)
     })
     socket.on('chat-message', (data) => {
         socket.broadcast.emit('chat-message', data)
+    })
+    socket.on('user', (username) => {
+        socket.emit('user', { username, message: `Hello ${username}` })
     })
 })
 

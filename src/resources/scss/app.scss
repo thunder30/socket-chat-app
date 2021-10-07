@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.container {
+    height: 100vh;
+}
+
 ul#messages {
     overflow-wrap: break-word;
     overflow-y: scroll;
