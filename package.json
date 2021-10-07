@@ -4,7 +4,7 @@
     "description": "chat socket",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "node src/index.js",
         "start": "nodemon src/index.js",
         "watch": "node-sass --watch src/resources/scss/ --output src/public/css/"
     },
